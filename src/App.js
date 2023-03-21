@@ -13,7 +13,23 @@ class App extends React.Component{
         testRow.addCellToUpperRow("a", 1);
         testRow.addCellToUpperRow("b", 1);
         testRow.addCellToUpperRow("c", 1);
+        testRow.addCellToUpperRow("", 1);
+        testRow.addCellToUpperRow("a", 1);
+        testRow.addCellToUpperRow("b", 1);
+        testRow.addCellToUpperRow("c", 1);
+        testRow.addCellToUpperRow("", 1);
+        testRow.addCellToUpperRow("a", 1);
+        testRow.addCellToUpperRow("b", 1);
+        testRow.addCellToUpperRow("c", 1);
 
+        testRow.addCellToBottomRow("1");
+        testRow.addCellToBottomRow("2");
+        testRow.addCellToBottomRow("3");
+        testRow.addCellToBottomRow(".");
+        testRow.addCellToBottomRow("1");
+        testRow.addCellToBottomRow("2");
+        testRow.addCellToBottomRow("3");
+        testRow.addCellToBottomRow(".");
         testRow.addCellToBottomRow("1");
         testRow.addCellToBottomRow("2");
         testRow.addCellToBottomRow("3");
@@ -40,26 +56,29 @@ class App extends React.Component{
 
     onCellClick = (cellItem) => {
         cellItem.selected = !cellItem.selected;
-        if (cellItem.selected) {
-            if (this.firstSelectedCell == null){
-                this.firstSelectedCell = cellItem;
-            } else {
-                // if second item is on another row than first selected item or if two selected items are not adjacent
-                if ((this.firstSelectedCell.parentRow.rowIndex != cellItem.parentRow.rowIndex) || Math.abs(this.firstSelectedCell.indexInRow - cellItem.indexInRow) > 1){
-                    this.firstSelectedCell.selected = false;
-                    this.firstSelectedCell = cellItem;
-
-                    this.secondSelectedCell = null;
-                } else {
-                    if (this.secondSelectedCell == null) {
-                        this.secondSelectedCell = cellItem;
-                    } else {
-                        this.firstSelectedCell = this.secondSelectedCell;
-                        this.secondSelectedCell = cellItem;
-                    }
-                }
-            }
-        }
+        // if (cellItem.selected) {
+        //     if (this.firstSelectedCell == null){
+        //         this.firstSelectedCell = cellItem;
+        //     } else {
+        //         // if second item is on another row than first selected item or if two selected items are not adjacent
+        //         if ((this.firstSelectedCell.parentRow.rowIndex !== cellItem.parentRow.rowIndex) ||
+        //             (Math.abs(this.firstSelectedCell.indexInRow - cellItem.indexInRow) > 1 &&
+        //                 (this.secondSelectedCell == null || (Math.abs(this.secondSelectedCell.indexInRow - cellItem.indexInRow) > 1)))){
+        //             this.firstSelectedCell.selected = false;
+        //             this.firstSelectedCell = cellItem;
+        //
+        //             this.secondSelectedCell = null;
+        //         } else {
+        //             if (this.secondSelectedCell == null) {
+        //                 this.secondSelectedCell = cellItem;
+        //             } else {
+        //                 this.firstSelectedCell = this.secondSelectedCell;
+        //                 this.secondSelectedCell = cellItem;
+        //             }
+        //         }
+        //     }
+        // }
+        console.log(this.firstSelectedCell, this.secondSelectedCell);
 
         this.setState({});
     }

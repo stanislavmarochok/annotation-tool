@@ -8,19 +8,20 @@ class App extends React.Component{
         this.state = {
             rows: []
         };
-        this.state.rows.push(
-            new RowItem([
-                new CellItem("a", 1),
-                new CellItem("b", 1),
-                new CellItem("c", 1)
-            ], [
-                new CellItem("1", 1),
-                new CellItem("2", 1),
-                new CellItem("3", 1)
-            ])
-        );
 
-        this.selectedCells = [];
+        let testRow = new RowItem(this.state.rows.length);
+        testRow.addCellToUpperRow("a", 1);
+        testRow.addCellToUpperRow("b", 1);
+        testRow.addCellToUpperRow("c", 1);
+
+        testRow.addCellToBottomRow("1");
+        testRow.addCellToBottomRow("2");
+        testRow.addCellToBottomRow("3");
+
+        this.state.rows.push(testRow);
+
+        this.firstSelectedCell = null;
+        this.secondSelectedCell = null;
     }
 
     render(){
@@ -39,51 +40,71 @@ class App extends React.Component{
 
     onCellClick = (cellItem) => {
         cellItem.selected = !cellItem.selected;
-        if (cellItem.selected){
-            this.selectedCells.push(cellItem);
-        } else {
-            let indexOfItemToRemove = this.selectedCells.indexOf(cellItem);
-            this.selectedCells.splice(indexOfItemToRemove, 1);
+        if (cellItem.selected) {
+            if (this.firstSelectedCell == null){
+                this.firstSelectedCell = cellItem;
+            } else {
+                // if second item is on another row than first selected item or if two selected items are not adjacent
+                if ((this.firstSelectedCell.parentRow.rowIndex != cellItem.parentRow.rowIndex) || Math.abs(this.firstSelectedCell.indexInRow - cellItem.indexInRow) > 1){
+                    this.firstSelectedCell.selected = false;
+                    this.firstSelectedCell = cellItem;
+
+                    this.secondSelectedCell = null;
+                } else {
+                    if (this.secondSelectedCell == null) {
+                        this.secondSelectedCell = cellItem;
+                    } else {
+                        this.firstSelectedCell = this.secondSelectedCell;
+                        this.secondSelectedCell = cellItem;
+                    }
+                }
+            }
         }
+
         this.setState({});
-        console.log(this.selectedCells);
     }
 
     mergeSelectedCells = () => {
-        let selectedCells = this.state.rows.
-        for (let i = 0; i < this.selectedCells.length; i++){
-            let firstCell = this.selectedCells[i];
-            let secondCell = this.selectedCells[i + 1];
-            if (firstCell != null && secondCell != null){
-                firstCell.data = firstCell.data + secondCell.data;
-                firstCell.colSpan = firstCell.colSpan + secondCell.colSpan;
-
-                // remove second cell from selectedCells
-                let indexOfItemToRemove = this.selectedCells.indexOf(secondCell);
-                this.selectedCells.splice(indexOfItemToRemove, 1);
-
-                // remove second cell from all cells
-                // todo: add to cell a reference to parent row
-                indexOfItemToRemove = this.state.rows[0].upperRowData.indexOf(secondCell);
-                this.state.rows[0].upperRowData.splice(indexOfItemToRemove, 1);
-            }
+        if (this.firstSelectedCell == null || this.secondSelectedCell == null){
+            console.log("Merge operation requires two items to be selected");
+            return;
         }
+
+        this.firstSelectedCell.data = this.firstSelectedCell.data + this.secondSelectedCell.data;
+        this.firstSelectedCell.colSpan = this.firstSelectedCell.colSpan + this.secondSelectedCell.colSpan;
+
+        // remove second cell from all cells
+        this.secondSelectedCell.parentRow.upperRowData.splice(this.secondSelectedCell.indexInRow, 1);
+
         this.setState({});
     }
 }
 
 class RowItem {
-    constructor(upperRowData, bottomRowData) {
-        this.upperRowData = upperRowData;
-        this.bottomRowData = bottomRowData;
+    constructor(rowIndex) {
+        this.upperRowData = [];
+        this.bottomRowData = [];
+        this.rowIndex = rowIndex;
+    }
+
+    addCellToUpperRow = (text, colSpan) => {
+        let cell = new CellItem(text, colSpan, this, this.upperRowData.length);
+        this.upperRowData.push(cell);
+    }
+
+    addCellToBottomRow = (text) => {
+        let cell = new CellItem(text, 1, this, this.bottomRowData.length);
+        this.bottomRowData.push(cell);
     }
 }
 
 class CellItem {
-    constructor(data, colSpan) {
+    constructor(data, colSpan, parentRow, indexInRow) {
         this.data = data;
         this.colSpan = colSpan;
         this.selected = false;
+        this.parentRow = parentRow;
+        this.indexInRow = indexInRow;
     }
 }
 

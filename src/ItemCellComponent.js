@@ -1,5 +1,5 @@
 import React from 'react';
-import './ItemCell.css';
+import './ItemCellComponent.css';
 
 class ItemCellComponent extends React.Component {
     constructor(props) {
@@ -13,9 +13,15 @@ class ItemCellComponent extends React.Component {
     render(){
         return (
             <div className={`item-cell ${this.props.className} ${this.props.cellItem.selected ? 'selected-cell' : ''}`} onClick={() => this.props.onClick(this.props.cellItem)}>
-                {this.props.cellItem.data}
+                {this.props.cellItem.isUpperRow &&
+                    <input name="upper-row-cell-input" onInput={this.handleChange} value={this.props.cellItem.data} size={this.props.cellItem.data.length} />}
+                {!this.props.cellItem.isUpperRow && this.props.cellItem.data}
             </div>
         );
+    }
+
+    handleChange = (event) => {
+        console.log(event.target.value);
     }
 }
 

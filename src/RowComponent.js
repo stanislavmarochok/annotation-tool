@@ -6,7 +6,7 @@ import './RowComponent.css';
 class RowComponent extends React.Component {
     render() {
         return (
-            <table cellPadding={0} cellSpacing={10} className={"row-table"}>
+            <table cellPadding={0} cellSpacing={0} className={"row-table"}>
                 <tbody>
                     <tr>
                         {this.props.rowData.upperRowData.map((x, idx) => (
@@ -17,7 +17,7 @@ class RowComponent extends React.Component {
                     </tr>
                     <tr>
                         {this.props.rowData.bottomRowData.map((x, idx) => (
-                            <td key={`bottom-row-cell-${idx}`}>
+                            <td key={`bottom-row-cell-${idx}`} colSpan={x.colSpan}>
                                 <BottomCellItemComponent cellItem={x} onClick={this.props.onCellClick} />
                             </td>
                         ))}

@@ -1,0 +1,36 @@
+.item-cell {
+    padding: 5px;
+    text-align: center;
+    transition: 250ms;
+    border: 1px solid black;
+    font-size: 1.2em;
+    font-weight: bold;
+    cursor: pointer;
+}
+
+.item-cell:hover {
+    background-color: lightskyblue;
+}
+
+.upper-line {
+    background-color: aquamarine;
+}
+
+.upper-line input {
+    background: transparent;
+    border: none;
+    border-bottom: 1px solid black;
+    text-align: center;
+    font-size: 1.2em;
+    font-weight: bold;
+}
+
+.bottom-line {
+    background-color: aqua;
+}
+
+.selected-cell {
+    /*box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;*/
+    border: 1px solid blue;
+    background-color: skyblue;
+}

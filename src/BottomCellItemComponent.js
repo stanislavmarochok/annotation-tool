@@ -5,9 +5,7 @@ class BottomCellItemComponent extends React.Component {
     render() {
         return <ItemCellComponent
             cellItem={this.props.cellItem}
-            onClick={() => {
-                console.log('do nothing, bottom row is not clickable');
-            }}
+            onClick={this.props.onClick}
             className={"bottom-line"} />
     }
 }

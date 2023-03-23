@@ -13,11 +13,11 @@ class App extends React.Component{
         testRow.addCellToUpperRow("a", 1);
         testRow.addCellToUpperRow("b", 1);
         testRow.addCellToUpperRow("c", 1);
-        testRow.addCellToUpperRow("", 1);
+        testRow.addCellToUpperRow(" ", 1);
         testRow.addCellToUpperRow("a", 1);
         testRow.addCellToUpperRow("b", 1);
         testRow.addCellToUpperRow("c", 1);
-        testRow.addCellToUpperRow("", 1);
+        testRow.addCellToUpperRow(" ", 1);
         testRow.addCellToUpperRow("a", 1);
         testRow.addCellToUpperRow("b", 1);
         testRow.addCellToUpperRow("c", 1);
@@ -33,17 +33,35 @@ class App extends React.Component{
         testRow.addCellToBottomRow("1");
         testRow.addCellToBottomRow("2");
         testRow.addCellToBottomRow("3");
+
+        let testRow2 = new RowItem(this.state.rows.length);
+        testRow2.addCellToUpperRow("b", 1);
+        testRow2.addCellToUpperRow("c", 1);
+        testRow2.addCellToUpperRow("a", 1);
+        testRow2.addCellToUpperRow(" ", 1);
+        testRow2.addCellToUpperRow("a", 1);
+        testRow2.addCellToUpperRow("b", 1);
+        testRow2.addCellToUpperRow("c", 1);
+
+        testRow2.addCellToBottomRow("1");
+        testRow2.addCellToBottomRow("2");
+        testRow2.addCellToBottomRow("3");
+        testRow2.addCellToBottomRow(".");
+        testRow2.addCellToBottomRow("1");
+        testRow2.addCellToBottomRow("2");
+        testRow2.addCellToBottomRow("3");
 
         this.state.rows.push(testRow);
-
-        this.firstSelectedCell = null;
-        this.secondSelectedCell = null;
+        this.state.rows.push(testRow2);
     }
 
     render(){
         return (
             <div className={"main-content-container"}>
                 <button onClick={this.mergeSelectedCells}>Merge selected cells</button>
+                <button onClick={this.splitSelectedCells}>Split selected cells</button>
+                <button onClick={this.increaseColSpanOfSelectedCells}>+1 selected cells colspan</button>
+                <button onClick={this.decreaseColSpanOfSelectedCells}>-1 selected cells colspan</button>
                 {this.state.rows.map((x, idx) => (
                     <RowComponent
                         key={`row-component-${idx}`}
@@ -56,46 +74,151 @@ class App extends React.Component{
 
     onCellClick = (cellItem) => {
         cellItem.selected = !cellItem.selected;
-        // if (cellItem.selected) {
-        //     if (this.firstSelectedCell == null){
-        //         this.firstSelectedCell = cellItem;
-        //     } else {
-        //         // if second item is on another row than first selected item or if two selected items are not adjacent
-        //         if ((this.firstSelectedCell.parentRow.rowIndex !== cellItem.parentRow.rowIndex) ||
-        //             (Math.abs(this.firstSelectedCell.indexInRow - cellItem.indexInRow) > 1 &&
-        //                 (this.secondSelectedCell == null || (Math.abs(this.secondSelectedCell.indexInRow - cellItem.indexInRow) > 1)))){
-        //             this.firstSelectedCell.selected = false;
-        //             this.firstSelectedCell = cellItem;
-        //
-        //             this.secondSelectedCell = null;
-        //         } else {
-        //             if (this.secondSelectedCell == null) {
-        //                 this.secondSelectedCell = cellItem;
-        //             } else {
-        //                 this.firstSelectedCell = this.secondSelectedCell;
-        //                 this.secondSelectedCell = cellItem;
-        //             }
-        //         }
-        //     }
-        // }
-        console.log(this.firstSelectedCell, this.secondSelectedCell);
-
         this.setState({});
     }
 
     mergeSelectedCells = () => {
-        if (this.firstSelectedCell == null || this.secondSelectedCell == null){
-            console.log("Merge operation requires two items to be selected");
+        for (let i = 0; i < this.state.rows.length; i++)
+        {
+            let row = this.state.rows[i];
+            let selectedCells = [];
+            let rows = [row.upperRowData, row.bottomRowData];
+            for (let rowIndex = 0; rowIndex < rows.length; rowIndex++)
+            {
+                let rowData = rows[rowIndex];
+                for (let j = 0; j < rowData.length; j++)
+                {
+                    let cell = rowData[j];
+                    if (cell.selected){
+                        selectedCells.push(cell);
+                    }
+                    else {
+                        const selectedCellsLength = selectedCells.length - 1;
+                        this.mergeCells(selectedCells);
+                        rowData.splice(j - selectedCellsLength, selectedCellsLength);
+
+                        selectedCells = [];
+                    }
+                }
+            }
+        }
+
+        this.setState({});
+    }
+
+    mergeCells = (cells) => {
+        if (cells.length <= 1) {
             return;
         }
 
-        this.firstSelectedCell.data = this.firstSelectedCell.data + this.secondSelectedCell.data;
-        this.firstSelectedCell.colSpan = this.firstSelectedCell.colSpan + this.secondSelectedCell.colSpan;
+        while (cells.length > 1) {
+            let firstSelectedCell = cells[0];
+            let secondSelectedCell = cells[1];
 
-        // remove second cell from all cells
-        this.secondSelectedCell.parentRow.upperRowData.splice(this.secondSelectedCell.indexInRow, 1);
+            firstSelectedCell.data = firstSelectedCell.data + secondSelectedCell.data;
+            firstSelectedCell.colSpan = firstSelectedCell.colSpan + secondSelectedCell.colSpan;
+
+            cells.splice(1, 1);
+        }
+    }
+
+    splitSelectedCells = () => {
+        for (let i = 0; i < this.state.rows.length; i++)
+        {
+            let row = this.state.rows[i];
+            let rows = [row.upperRowData, row.bottomRowData];
+            for (let rowIndex = 0; rowIndex < rows.length; rowIndex++)
+            {
+                let rowData = rows[rowIndex];
+                for (let j = 0; j < rowData.length; j++)
+                {
+                    let cell = rowData[j];
+                    if (cell.selected)
+                    {
+                        if (cell.colSpan > 1)
+                        {
+                            // split cell to multiple cells
+                            const splittedCells = this.splitCell(cell);
+                            rowData.splice(j, 1, ...splittedCells);
+                        }
+                    }
+                }
+            }
+        }
 
         this.setState({});
+    }
+
+    splitCell = (cell) => {
+        let splittedCells = [];
+
+        const colSpan = cell.colSpan;
+        while (splittedCells.length < colSpan)
+        {
+            let newCell = new CellItem(cell.data[0], 1, cell.parentRow, cell.indexInRow, true);
+            newCell.selected = true;
+            splittedCells.push(newCell);
+
+            cell = new CellItem(cell.data.substring(1), cell.colSpan - 1, cell.parentRow, cell.indexInRow + 1, true);
+        }
+
+        return splittedCells;
+    }
+
+    increaseColSpanOfSelectedCells = () => {
+        console.log('test');
+        for (let i = 0; i < this.state.rows.length; i++)
+        {
+            let row = this.state.rows[i];
+            let rows = [row.upperRowData, row.bottomRowData];
+            for (let rowIndex = 0; rowIndex < rows.length; rowIndex++)
+            {
+                let rowData = rows[rowIndex];
+                for (let j = 0; j < rowData.length; j++)
+                {
+                    let cell = rowData[j];
+                    if (cell.selected){
+                        this.increaseColSpanOfCell(cell);
+                    }
+                }
+            }
+        }
+
+        this.setState({});
+    }
+
+    increaseColSpanOfCell = (cell) => {
+        cell.colSpan += 1;
+    }
+
+    decreaseColSpanOfSelectedCells = () => {
+        for (let i = 0; i < this.state.rows.length; i++)
+        {
+            let row = this.state.rows[i];
+            let rows = [row.upperRowData, row.bottomRowData];
+            for (let rowIndex = 0; rowIndex < rows.length; rowIndex++)
+            {
+                let rowData = rows[rowIndex];
+                for (let j = 0; j < rowData.length; j++)
+                {
+                    let cell = rowData[j];
+                    if (cell.selected){
+                        this.decreaseColSpanOfCell(cell);
+                    }
+                }
+            }
+        }
+
+        this.setState({});
+    }
+
+    decreaseColSpanOfCell = (cell) => {
+        if (cell.colSpan <= 1)
+        {
+            return;
+        }
+
+        cell.colSpan -= 1;
     }
 }
 
@@ -107,23 +230,24 @@ class RowItem {
     }
 
     addCellToUpperRow = (text, colSpan) => {
-        let cell = new CellItem(text, colSpan, this, this.upperRowData.length);
+        let cell = new CellItem(text, colSpan, this, this.upperRowData.length, true);
         this.upperRowData.push(cell);
     }
 
     addCellToBottomRow = (text) => {
-        let cell = new CellItem(text, 1, this, this.bottomRowData.length);
+        let cell = new CellItem(text, 1, this, this.bottomRowData.length, false);
         this.bottomRowData.push(cell);
     }
 }
 
 class CellItem {
-    constructor(data, colSpan, parentRow, indexInRow) {
+    constructor(data, colSpan, parentRow, indexInRow, isUpperRow) {
         this.data = data;
         this.colSpan = colSpan;
         this.selected = false;
         this.parentRow = parentRow;
         this.indexInRow = indexInRow;
+        this.isUpperRow = isUpperRow;
     }
 }
 

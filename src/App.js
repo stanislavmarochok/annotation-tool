@@ -66,7 +66,9 @@ class App extends React.Component{
                     <RowComponent
                         key={`row-component-${idx}`}
                         rowData={x}
-                        onCellClick={this.onCellClick} />
+                        onCellClick={this.onCellClick}
+                        handleCellInputChange={this.handleCellInputChange}
+                    />
                 ))}
             </div>
         );
@@ -74,6 +76,11 @@ class App extends React.Component{
 
     onCellClick = (cellItem) => {
         cellItem.selected = !cellItem.selected;
+        this.setState({});
+    }
+
+    handleCellInputChange = (cellItem, newValue) => {
+        cellItem.data = newValue;
         this.setState({});
     }
 
@@ -155,11 +162,11 @@ class App extends React.Component{
         const colSpan = cell.colSpan;
         while (splittedCells.length < colSpan)
         {
-            let newCell = new CellItem(cell.data[0], 1, cell.parentRow, cell.indexInRow, true);
+            let newCell = new CellItem(cell.data[0], 1, cell.parentRow, cell.indexInRow);
             newCell.selected = true;
             splittedCells.push(newCell);
 
-            cell = new CellItem(cell.data.substring(1), cell.colSpan - 1, cell.parentRow, cell.indexInRow + 1, true);
+            cell = new CellItem(cell.data.substring(1), cell.colSpan - 1, cell.parentRow, cell.indexInRow + 1);
         }
 
         return splittedCells;
@@ -230,24 +237,23 @@ class RowItem {
     }
 
     addCellToUpperRow = (text, colSpan) => {
-        let cell = new CellItem(text, colSpan, this, this.upperRowData.length, true);
+        let cell = new CellItem(text, colSpan, this, this.upperRowData.length);
         this.upperRowData.push(cell);
     }
 
     addCellToBottomRow = (text) => {
-        let cell = new CellItem(text, 1, this, this.bottomRowData.length, false);
+        let cell = new CellItem(text, 1, this, this.bottomRowData.length);
         this.bottomRowData.push(cell);
     }
 }
 
 class CellItem {
-    constructor(data, colSpan, parentRow, indexInRow, isUpperRow) {
+    constructor(data, colSpan, parentRow, indexInRow) {
         this.data = data;
         this.colSpan = colSpan;
         this.selected = false;
         this.parentRow = parentRow;
         this.indexInRow = indexInRow;
-        this.isUpperRow = isUpperRow;
     }
 }
 

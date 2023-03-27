@@ -6,6 +6,8 @@ class UpperCellItemComponent extends React.Component {
         return <ItemCellComponent
             cellItem={this.props.cellItem}
             onClick={this.props.onClick}
+            handleCellInputChange={this.props.handleCellInputChange}
+            isUpperRow={true}
             className={"upper-line"} />
     }
 }

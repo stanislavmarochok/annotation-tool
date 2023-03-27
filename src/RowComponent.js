@@ -11,14 +11,20 @@ class RowComponent extends React.Component {
                     <tr>
                         {this.props.rowData.upperRowData.map((x, idx) => (
                             <td key={`upper-row-cell-${idx}`} colSpan={x.colSpan}>
-                                <UpperCellItemComponent cellItem={x} onClick={this.props.onCellClick} />
+                                <UpperCellItemComponent
+                                    cellItem={x}
+                                    onClick={this.props.onCellClick}
+                                    handleCellInputChange={this.props.handleCellInputChange} />
                             </td>
                         ))}
                     </tr>
                     <tr>
                         {this.props.rowData.bottomRowData.map((x, idx) => (
                             <td key={`bottom-row-cell-${idx}`} colSpan={x.colSpan}>
-                                <BottomCellItemComponent cellItem={x} onClick={this.props.onCellClick} />
+                                <BottomCellItemComponent
+                                    cellItem={x}
+                                    onClick={this.props.onCellClick}
+                                    handleCellInputChange={this.props.handleCellInputChange} />
                             </td>
                         ))}
                     </tr>

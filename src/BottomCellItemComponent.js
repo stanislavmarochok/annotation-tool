@@ -6,6 +6,8 @@ class BottomCellItemComponent extends React.Component {
         return <ItemCellComponent
             cellItem={this.props.cellItem}
             onClick={this.props.onClick}
+            handleCellInputChange={this.props.handleCellInputChange}
+            isUpperRow={false}
             className={"bottom-line"} />
     }
 }

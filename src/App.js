@@ -1,7 +1,7 @@
 import './App.css';
 import React from 'react';
 import RowComponent from "./RowComponent";
-import ImportFileComponent from "./ImportFileComponent";
+import Header from "./Header";
 
 class App extends React.Component{
     constructor(props) {
@@ -15,32 +15,22 @@ class App extends React.Component{
 
     render(){
         return (
-            <div className={"main-content-container"}>
-                {this.renderButtons()}
-                {this.renderImportFileComponent()}
-                {this.state.rows.map((x, idx) => (
-                    <RowComponent
-                        key={`row-component-${idx}`}
-                        row={x}
-                        onCellClick={this.onCellClick}
-                        handleCellInputChange={this.handleCellInputChange}
-                    />
-                ))}
-            </div>
+            <>
+                <Header
+                    mergeSelectedCells={this.mergeSelectedCells}
+                    splitSelectedCells={this.splitSelectedCells} />
+                <div className={"main-content-container"}>
+                    {this.state.rows.map((x, idx) => (
+                        <RowComponent
+                            key={`row-component-${idx}`}
+                            row={x}
+                            onCellClick={this.onCellClick}
+                            handleCellInputChange={this.handleCellInputChange}
+                        />
+                    ))}
+                </div>
+            </>
         );
-    }
-
-    renderButtons = () => {
-        return <>
-            <button onClick={this.mergeSelectedCells}>Merge selected cells</button>
-            <button onClick={this.splitSelectedCells}>Split selected cells</button>
-        </>;
-    }
-
-    renderImportFileComponent = () => {
-        return <>
-            <ImportFileComponent />
-        </>;
     }
 
     createTestData = () => {

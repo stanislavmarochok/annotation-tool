@@ -1,0 +1,13 @@
+.header-container {
+    width: 100%;
+    background-color: skyblue;
+}
+
+.header-title {
+    font-size: 2em;
+    float: left;
+}
+
+.header-buttons {
+
+}

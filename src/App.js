@@ -71,7 +71,7 @@ class App extends React.Component{
     }
 
     handleCellInputChange = (cellItem, newValue) => {
-        cellItem.data = newValue;
+        cellItem.plainText = newValue;
         this.setState({});
     }
 

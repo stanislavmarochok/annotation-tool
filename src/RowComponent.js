@@ -9,8 +9,8 @@ class RowComponent extends React.Component {
             <table cellPadding={0} cellSpacing={0} className={"row-table"}>
                 <tbody>
                     <tr>
-                        {this.props.rowData.upperRowData.map((x, idx) => (
-                            <td key={`upper-row-cell-${idx}`} colSpan={x.colSpan}>
+                        {this.props.row.rowData.map((x, idx) => (
+                            <td key={`upper-row-cell-${idx}`}>
                                 <UpperCellItemComponent
                                     cellItem={x}
                                     onClick={this.props.onCellClick}
@@ -19,8 +19,8 @@ class RowComponent extends React.Component {
                         ))}
                     </tr>
                     <tr>
-                        {this.props.rowData.bottomRowData.map((x, idx) => (
-                            <td key={`bottom-row-cell-${idx}`} colSpan={x.colSpan}>
+                        {this.props.row.rowData.map((x, idx) => (
+                            <td key={`bottom-row-cell-${idx}`}>
                                 <BottomCellItemComponent
                                     cellItem={x}
                                     onClick={this.props.onCellClick}

@@ -21,7 +21,7 @@ class App extends React.Component{
                 {this.state.rows.map((x, idx) => (
                     <RowComponent
                         key={`row-component-${idx}`}
-                        rowData={x}
+                        row={x}
                         onCellClick={this.onCellClick}
                         handleCellInputChange={this.handleCellInputChange}
                     />
@@ -34,8 +34,6 @@ class App extends React.Component{
         return <>
             <button onClick={this.mergeSelectedCells}>Merge selected cells</button>
             <button onClick={this.splitSelectedCells}>Split selected cells</button>
-            <button onClick={this.increaseColSpanOfSelectedCells}>+1 selected cells colspan</button>
-            <button onClick={this.decreaseColSpanOfSelectedCells}>-1 selected cells colspan</button>
         </>;
     }
 
@@ -55,14 +53,12 @@ class App extends React.Component{
             "00590424321593643360087036451223006303600590\n";
 
         let rawRows = rawRowsText.split('\n');
-        console.log(rawRows);
 
         for (let i = 0; i < rawRows.length; i++){
             let rawRow = rawRows[i];
             let row = new RowItem(i);
             for (let j = 0; j < rawRow.length; j++){
-                row.addCellToUpperRow(" ", 1);
-                row.addCellToBottomRow(rawRow[j], 1);
+                row.addCellToRow(rawRow[j], " ", 1);
             }
             this.state.rows.push(row);
         }
@@ -70,6 +66,7 @@ class App extends React.Component{
 
     onCellClick = (cellItem) => {
         cellItem.selected = !cellItem.selected;
+        console.log(cellItem);
         this.setState({});
     }
 
@@ -83,23 +80,18 @@ class App extends React.Component{
         {
             let row = this.state.rows[i];
             let selectedCells = [];
-            let rows = [row.upperRowData, row.bottomRowData];
-            for (let rowIndex = 0; rowIndex < rows.length; rowIndex++)
+            for (let j = 0; j < row.rowData.length; j++)
             {
-                let rowData = rows[rowIndex];
-                for (let j = 0; j < rowData.length; j++)
-                {
-                    let cell = rowData[j];
-                    if (cell.selected){
-                        selectedCells.push(cell);
-                    }
-                    else {
-                        const selectedCellsLength = selectedCells.length - 1;
-                        this.mergeCells(selectedCells);
-                        rowData.splice(j - selectedCellsLength, selectedCellsLength);
+                let cell = row.rowData[j];
+                if (cell.selected){
+                    selectedCells.push(cell);
+                }
+                else {
+                    const selectedCellsLength = selectedCells.length - 1;
+                    this.mergeCells(selectedCells);
+                    row.rowData.splice(j - selectedCellsLength, selectedCellsLength);
 
-                        selectedCells = [];
-                    }
+                    selectedCells = [];
                 }
             }
         }
@@ -116,8 +108,8 @@ class App extends React.Component{
             let firstSelectedCell = cells[0];
             let secondSelectedCell = cells[1];
 
-            firstSelectedCell.data = firstSelectedCell.data + secondSelectedCell.data;
-            firstSelectedCell.colSpan = firstSelectedCell.colSpan + secondSelectedCell.colSpan;
+            firstSelectedCell.plainText = firstSelectedCell.plainText + secondSelectedCell.plainText;
+            firstSelectedCell.cipherText = firstSelectedCell.cipherText + secondSelectedCell.cipherText;
 
             cells.splice(1, 1);
         }
@@ -127,21 +119,16 @@ class App extends React.Component{
         for (let i = 0; i < this.state.rows.length; i++)
         {
             let row = this.state.rows[i];
-            let rows = [row.upperRowData, row.bottomRowData];
-            for (let rowIndex = 0; rowIndex < rows.length; rowIndex++)
+            for (let j = 0; j < row.rowData.length; j++)
             {
-                let rowData = rows[rowIndex];
-                for (let j = 0; j < rowData.length; j++)
+                let cell = row.rowData[j];
+                if (cell.selected)
                 {
-                    let cell = rowData[j];
-                    if (cell.selected)
+                    if (cell.cipherText.length > 1)
                     {
-                        if (cell.colSpan > 1)
-                        {
-                            // split cell to multiple cells
-                            const splittedCells = this.splitCell(cell);
-                            rowData.splice(j, 1, ...splittedCells);
-                        }
+                        // split cell to multiple cells
+                        const splittedCells = this.splitCell(cell);
+                        row.rowData.splice(j, 1, ...splittedCells);
                     }
                 }
             }
@@ -153,98 +140,36 @@ class App extends React.Component{
     splitCell = (cell) => {
         let splittedCells = [];
 
-        const colSpan = cell.colSpan;
-        while (splittedCells.length < colSpan)
+        const cellData = cell.cipherText;
+        while (splittedCells.length < cellData.length)
         {
-            let newCell = new CellItem(cell.data[0], 1, cell.parentRow, cell.indexInRow);
+            let newCell = new CellItem(cell.cipherText[0], " ", cell.parentRow, cell.indexInRow);
             newCell.selected = true;
             splittedCells.push(newCell);
 
-            cell = new CellItem(cell.data.substring(1), cell.colSpan - 1, cell.parentRow, cell.indexInRow + 1);
+            cell = new CellItem(cell.cipherText.substring(1), " ", cell.parentRow, cell.indexInRow + 1);
         }
 
         return splittedCells;
-    }
-
-    increaseColSpanOfSelectedCells = () => {
-        console.log('test');
-        for (let i = 0; i < this.state.rows.length; i++)
-        {
-            let row = this.state.rows[i];
-            let rows = [row.upperRowData, row.bottomRowData];
-            for (let rowIndex = 0; rowIndex < rows.length; rowIndex++)
-            {
-                let rowData = rows[rowIndex];
-                for (let j = 0; j < rowData.length; j++)
-                {
-                    let cell = rowData[j];
-                    if (cell.selected){
-                        this.increaseColSpanOfCell(cell);
-                    }
-                }
-            }
-        }
-
-        this.setState({});
-    }
-
-    increaseColSpanOfCell = (cell) => {
-        cell.colSpan += 1;
-    }
-
-    decreaseColSpanOfSelectedCells = () => {
-        for (let i = 0; i < this.state.rows.length; i++)
-        {
-            let row = this.state.rows[i];
-            let rows = [row.upperRowData, row.bottomRowData];
-            for (let rowIndex = 0; rowIndex < rows.length; rowIndex++)
-            {
-                let rowData = rows[rowIndex];
-                for (let j = 0; j < rowData.length; j++)
-                {
-                    let cell = rowData[j];
-                    if (cell.selected){
-                        this.decreaseColSpanOfCell(cell);
-                    }
-                }
-            }
-        }
-
-        this.setState({});
-    }
-
-    decreaseColSpanOfCell = (cell) => {
-        if (cell.colSpan <= 1)
-        {
-            return;
-        }
-
-        cell.colSpan -= 1;
     }
 }
 
 class RowItem {
     constructor(rowIndex) {
-        this.upperRowData = [];
-        this.bottomRowData = [];
+        this.rowData = [];
         this.rowIndex = rowIndex;
     }
 
-    addCellToUpperRow = (text, colSpan) => {
-        let cell = new CellItem(text, colSpan, this, this.upperRowData.length);
-        this.upperRowData.push(cell);
-    }
-
-    addCellToBottomRow = (text) => {
-        let cell = new CellItem(text, 1, this, this.bottomRowData.length);
-        this.bottomRowData.push(cell);
+    addCellToRow = (cipherText, plainText) => {
+        let cell = new CellItem(cipherText, plainText, this, this.rowData);
+        this.rowData.push(cell);
     }
 }
 
 class CellItem {
-    constructor(data, colSpan, parentRow, indexInRow) {
-        this.data = data;
-        this.colSpan = colSpan;
+    constructor(cipherText, plainText, parentRow, indexInRow) {
+        this.cipherText = cipherText;
+        this.plainText = plainText;
         this.selected = false;
         this.parentRow = parentRow;
         this.indexInRow = indexInRow;

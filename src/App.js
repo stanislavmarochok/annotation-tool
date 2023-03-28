@@ -1,6 +1,7 @@
 import './App.css';
 import React from 'react';
 import RowComponent from "./RowComponent";
+import ImportFileComponent from "./ImportFileComponent";
 
 class App extends React.Component{
     constructor(props) {
@@ -9,59 +10,14 @@ class App extends React.Component{
             rows: []
         };
 
-        let testRow = new RowItem(this.state.rows.length);
-        testRow.addCellToUpperRow("a", 1);
-        testRow.addCellToUpperRow("b", 1);
-        testRow.addCellToUpperRow("c", 1);
-        testRow.addCellToUpperRow(" ", 1);
-        testRow.addCellToUpperRow("a", 1);
-        testRow.addCellToUpperRow("b", 1);
-        testRow.addCellToUpperRow("c", 1);
-        testRow.addCellToUpperRow(" ", 1);
-        testRow.addCellToUpperRow("a", 1);
-        testRow.addCellToUpperRow("b", 1);
-        testRow.addCellToUpperRow("c", 1);
-
-        testRow.addCellToBottomRow("1");
-        testRow.addCellToBottomRow("2");
-        testRow.addCellToBottomRow("3");
-        testRow.addCellToBottomRow(".");
-        testRow.addCellToBottomRow("1");
-        testRow.addCellToBottomRow("2");
-        testRow.addCellToBottomRow("3");
-        testRow.addCellToBottomRow(".");
-        testRow.addCellToBottomRow("1");
-        testRow.addCellToBottomRow("2");
-        testRow.addCellToBottomRow("3");
-
-        let testRow2 = new RowItem(this.state.rows.length);
-        testRow2.addCellToUpperRow("b", 1);
-        testRow2.addCellToUpperRow("c", 1);
-        testRow2.addCellToUpperRow("a", 1);
-        testRow2.addCellToUpperRow(" ", 1);
-        testRow2.addCellToUpperRow("a", 1);
-        testRow2.addCellToUpperRow("b", 1);
-        testRow2.addCellToUpperRow("c", 1);
-
-        testRow2.addCellToBottomRow("1");
-        testRow2.addCellToBottomRow("2");
-        testRow2.addCellToBottomRow("3");
-        testRow2.addCellToBottomRow(".");
-        testRow2.addCellToBottomRow("1");
-        testRow2.addCellToBottomRow("2");
-        testRow2.addCellToBottomRow("3");
-
-        this.state.rows.push(testRow);
-        this.state.rows.push(testRow2);
+        this.createTestData();
     }
 
     render(){
         return (
             <div className={"main-content-container"}>
-                <button onClick={this.mergeSelectedCells}>Merge selected cells</button>
-                <button onClick={this.splitSelectedCells}>Split selected cells</button>
-                <button onClick={this.increaseColSpanOfSelectedCells}>+1 selected cells colspan</button>
-                <button onClick={this.decreaseColSpanOfSelectedCells}>-1 selected cells colspan</button>
+                {this.renderButtons()}
+                {this.renderImportFileComponent()}
                 {this.state.rows.map((x, idx) => (
                     <RowComponent
                         key={`row-component-${idx}`}
@@ -72,6 +28,44 @@ class App extends React.Component{
                 ))}
             </div>
         );
+    }
+
+    renderButtons = () => {
+        return <>
+            <button onClick={this.mergeSelectedCells}>Merge selected cells</button>
+            <button onClick={this.splitSelectedCells}>Split selected cells</button>
+            <button onClick={this.increaseColSpanOfSelectedCells}>+1 selected cells colspan</button>
+            <button onClick={this.decreaseColSpanOfSelectedCells}>-1 selected cells colspan</button>
+        </>;
+    }
+
+    renderImportFileComponent = () => {
+        return <>
+            <ImportFileComponent />
+        </>;
+    }
+
+    createTestData = () => {
+        // todo: remove this function later
+
+        let rawRowsText = "6323194643424029339684338344236421282556353\n" +
+            "1343233867360002719566437833639234338934572\n" +
+            "89114323193836464804239003505141541179438549\n" +
+            "0063000570426234412346914216199548914900630\n" +
+            "00590424321593643360087036451223006303600590\n";
+
+        let rawRows = rawRowsText.split('\n');
+        console.log(rawRows);
+
+        for (let i = 0; i < rawRows.length; i++){
+            let rawRow = rawRows[i];
+            let row = new RowItem(i);
+            for (let j = 0; j < rawRow.length; j++){
+                row.addCellToUpperRow(" ", 1);
+                row.addCellToBottomRow(rawRow[j], 1);
+            }
+            this.state.rows.push(row);
+        }
     }
 
     onCellClick = (cellItem) => {

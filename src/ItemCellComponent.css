@@ -4,7 +4,7 @@
     transition: 250ms;
     border: 1px solid black;
     font-size: 1.2em;
-    font-weight: bold;
+    /*font-weight: bold;*/
     cursor: pointer;
 }
 
@@ -22,7 +22,7 @@
     border-bottom: 1px solid black;
     text-align: center;
     font-size: 1.2em;
-    font-weight: bold;
+    /*font-weight: bold;*/
 }
 
 .bottom-line {

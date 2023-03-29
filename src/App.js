@@ -9,8 +9,10 @@ class App extends React.Component{
         this.state = {
             rows: []
         };
+    }
 
-        this.createTestData();
+    componentDidMount() {
+        // this.createTestData();
     }
 
     render(){
@@ -76,6 +78,10 @@ class App extends React.Component{
         let rows = [];
         for (let i = 0; i < rawRows.length; i++){
             let rawRow = rawRows[i];
+            rawRow = rawRow.trim();
+            if (!rawRow)
+                continue;
+
             let row = new RowItem(i);
             for (let j = 0; j < rawRow.length; j++){
                 let cell = new CellItem(rawRow[j], " ", row.rowData.length);

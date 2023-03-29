@@ -18,7 +18,10 @@ class App extends React.Component{
             <>
                 <Header
                     mergeSelectedCells={this.mergeSelectedCells}
-                    splitSelectedCells={this.splitSelectedCells} />
+                    splitSelectedCells={this.splitSelectedCells}
+                    exportData={this.exportData}
+                    handleTxtFileImport={this.handleTxtFileImport}
+                    handleJsonFileImport={this.handleJsonFileImport} />
                 <div className={"main-content-container"}>
                     {this.state.rows.map((x, idx) => (
                         <RowComponent
@@ -43,15 +46,44 @@ class App extends React.Component{
             "00590424321593643360087036451223006303600590\n";
 
         let rawRows = rawRowsText.split('\n');
+        this.writeRows(rawRows);
+    }
 
+    exportData = () => {
+        console.log("exporting data");
+        const stringifiedData = JSON.stringify(this.state.rows);
+        const blob = new Blob([stringifiedData], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.download = "data.json";
+        link.href = url;
+        link.click();
+    }
+
+    handleTxtFileImport = (fileContent) => {
+        console.log(fileContent);
+        let rawRows = fileContent.split('\n');
+        this.writeRows(rawRows);
+    }
+
+    handleJsonFileImport = (fileJsonContent) => {
+        let rows = JSON.parse(fileJsonContent);
+        this.setState({ rows: rows });
+    }
+
+    writeRows = (rawRows) => {
+        let rows = [];
         for (let i = 0; i < rawRows.length; i++){
             let rawRow = rawRows[i];
             let row = new RowItem(i);
             for (let j = 0; j < rawRow.length; j++){
-                row.addCellToRow(rawRow[j], " ", 1);
+                let cell = new CellItem(rawRow[j], " ", row.rowData.length);
+                row.rowData.push(cell);
             }
-            this.state.rows.push(row);
+            rows.push(row);
         }
+        this.setState({ rows: rows });
     }
 
     onCellClick = (cellItem) => {
@@ -133,11 +165,11 @@ class App extends React.Component{
         const cellData = cell.cipherText;
         while (splittedCells.length < cellData.length)
         {
-            let newCell = new CellItem(cell.cipherText[0], " ", cell.parentRow, cell.indexInRow);
+            let newCell = new CellItem(cell.cipherText[0], " ", cell.indexInRow);
             newCell.selected = true;
             splittedCells.push(newCell);
 
-            cell = new CellItem(cell.cipherText.substring(1), " ", cell.parentRow, cell.indexInRow + 1);
+            cell = new CellItem(cell.cipherText.substring(1), " ", cell.indexInRow + 1);
         }
 
         return splittedCells;
@@ -149,19 +181,13 @@ class RowItem {
         this.rowData = [];
         this.rowIndex = rowIndex;
     }
-
-    addCellToRow = (cipherText, plainText) => {
-        let cell = new CellItem(cipherText, plainText, this, this.rowData);
-        this.rowData.push(cell);
-    }
 }
 
 class CellItem {
-    constructor(cipherText, plainText, parentRow, indexInRow) {
+    constructor(cipherText, plainText, indexInRow) {
         this.cipherText = cipherText;
         this.plainText = plainText;
         this.selected = false;
-        this.parentRow = parentRow;
         this.indexInRow = indexInRow;
     }
 }

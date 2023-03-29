@@ -1,13 +1,37 @@
 .header-container {
     width: 100%;
     background-color: skyblue;
+    display: flex;
+}
+
+.header-item {
+
 }
 
 .header-title {
-    font-size: 2em;
-    float: left;
+    font-size: 30px;
+    flex-grow: 2;
+    margin: 5px;
 }
 
-.header-buttons {
+.header-buttons-container {
+    display: flex;
+}
 
+.header-buttons-item {
+    height: 100%;
+}
+
+.header-buttons-item-inner {
+    height: 30px;
+    margin: 5px;
+}
+
+.header-buttons-item .import-file-input-label {
+    background-color: aqua;
+    color: black;
+    border: 1px solid black;
+    border-radius: 2px;
+    height: 100%;
+    margin: 5px;
 }

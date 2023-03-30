@@ -22,7 +22,8 @@ class App extends React.Component{
                     mergeSelectedCells={this.mergeSelectedCells}
                     splitSelectedCells={this.splitSelectedCells}
                     exportData={this.exportData}
-                    handleTxtFileImport={this.handleTxtFileImport}
+                    handleTxtCiphertextFileImport={this.handleTxtCiphertextFileImport}
+                    handleTxtPlaintextFileImport={this.handleTxtPlaintextFileImport}
                     handleJsonFileImport={this.handleJsonFileImport} />
                 <div className={"main-content-container"}>
                     {this.state.rows.map((x, idx) => (
@@ -63,10 +64,16 @@ class App extends React.Component{
         link.click();
     }
 
-    handleTxtFileImport = (fileContent) => {
+    handleTxtCiphertextFileImport = (fileContent) => {
         console.log(fileContent);
         let rawRows = fileContent.split('\n');
-        this.writeRows(rawRows);
+        this.writeRowsCiphertext(rawRows);
+    }
+
+    handleTxtPlaintextFileImport = (fileContent) => {
+        console.log('txt plaintext file import here');
+        // let rawRows = fileContent.split('\n');
+        // this.writeRowsPlaintext(rawRows);
     }
 
     handleJsonFileImport = (fileJsonContent) => {
@@ -74,7 +81,25 @@ class App extends React.Component{
         this.setState({ rows: rows });
     }
 
-    writeRows = (rawRows) => {
+    writeRowsCiphertext = (rawRows) => {
+        let rows = [];
+        for (let i = 0; i < rawRows.length; i++){
+            let rawRow = rawRows[i];
+            rawRow = rawRow.trim();
+            if (!rawRow)
+                continue;
+
+            let row = new RowItem(i);
+            for (let j = 0; j < rawRow.length; j++){
+                let cell = new CellItem(rawRow[j], " ", row.rowData.length);
+                row.rowData.push(cell);
+            }
+            rows.push(row);
+        }
+        this.setState({ rows: rows });
+    }
+
+    writeRowsPlaintext = (rawRows) => {
         let rows = [];
         for (let i = 0; i < rawRows.length; i++){
             let rawRow = rawRows[i];

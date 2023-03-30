@@ -7,8 +7,6 @@ import DropdownButton from 'react-bootstrap/DropdownButton';
 
 class Header extends React.Component {
     render(){
-
-
         return (
             <div className={"header-container"}>
                 <div className={"header-item header-title"}>Annotations-tool</div>
@@ -23,14 +21,26 @@ class Header extends React.Component {
 
                         <Dropdown.Item eventKey="1">
                             <input
-                                id={"import-txt-file-input"}
+                                id={"import-txt-ciphertext-file-input"}
                                 className={"header-buttons-item-inner"}
                                 type={"file"}
-                                name={"txt-file"}
+                                name={"txt-ciphertext-file"}
                                 accept={".txt"}
-                                onChange={this.handleImportTxtFile}
+                                onChange={this.handleImportTxtCiphertextFile}
                                 hidden />
-                            <label onClick={this.handleImportTxtCiphertextButtonClick}>Import TXT file</label>
+                            <label onClick={this.handleImportTxtCiphertextButtonClick}>Import TXT ciphertext file</label>
+                        </Dropdown.Item>
+
+                        <Dropdown.Item eventKey="1">
+                            <input
+                                id={"import-txt-plaintext-file-input"}
+                                className={"header-buttons-item-inner"}
+                                type={"file"}
+                                name={"txt-plaintext-file"}
+                                accept={".txt"}
+                                onChange={this.handleImportTxtPlaintextFile}
+                                hidden />
+                            <label onClick={this.handleImportTxtPlaintextButtonClick}>Import TXT plaintext file</label>
                         </Dropdown.Item>
 
                         <Dropdown.Item eventKey="2">
@@ -86,7 +96,17 @@ class Header extends React.Component {
             "bubbles": true,
             "cancelable": false
         });
-        let input = document.getElementById('import-txt-file-input');
+        let input = document.getElementById('import-txt-ciphertext-file-input');
+        input.dispatchEvent(clickEvent);
+    }
+
+    handleImportTxtPlaintextButtonClick = () => {
+        var clickEvent = new MouseEvent("click", {
+            "view": window,
+            "bubbles": true,
+            "cancelable": false
+        });
+        let input = document.getElementById('import-txt-plaintext-file-input');
         input.dispatchEvent(clickEvent);
     }
 
@@ -100,16 +120,30 @@ class Header extends React.Component {
         input.dispatchEvent(clickEvent);
     }
 
-    handleImportTxtFile = async (e) => {
-        console.log('Importing txt document');
+    handleImportTxtCiphertextFile = async (e) => {
+        console.log('Importing txt ciphertext file');
         e.preventDefault();
         const reader = new FileReader();
         reader.onload = async (e) => {
             const text = (e.target.result);
 
-            document.getElementById("import-txt-file-input").value = null;
+            document.getElementById("import-txt-ciphertext-file-input").value = null;
 
-            this.props.handleTxtFileImport(text);
+            this.props.handleTxtCiphertextFileImport(text);
+        };
+        reader.readAsText(e.target.files[0]);
+    }
+
+    handleImportTxtPlaintextFile = async (e) => {
+        console.log('Importing txt plaintext file');
+        e.preventDefault();
+        const reader = new FileReader();
+        reader.onload = async (e) => {
+            const text = (e.target.result);
+
+            document.getElementById("import-txt-plaintext-file-input").value = null;
+
+            this.props.handleTxtPlaintextFileImport(text);
         };
         reader.readAsText(e.target.files[0]);
     }

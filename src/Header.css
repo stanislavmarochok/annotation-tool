@@ -23,15 +23,6 @@
 }
 
 .header-buttons-item-inner {
-    height: 30px;
-    margin: 5px;
+    cursor: pointer;
 }
 
-.header-buttons-item .import-file-input-label {
-    background-color: aqua;
-    color: black;
-    border: 1px solid black;
-    border-radius: 2px;
-    height: 100%;
-    margin: 5px;
-}

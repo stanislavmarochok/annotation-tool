@@ -1,41 +1,103 @@
 import React from 'react';
 import './Header.css';
 
-class Header extends React.Component {
-    constructor(props) {
-        super(props);
-        console.log('Header constructor here');
-    }
+import ButtonGroup from 'react-bootstrap/ButtonGroup';
+import Dropdown from 'react-bootstrap/Dropdown';
+import DropdownButton from 'react-bootstrap/DropdownButton';
 
+class Header extends React.Component {
     render(){
+
+
         return (
             <div className={"header-container"}>
                 <div className={"header-item header-title"}>Annotations-tool</div>
                 <div className={"header-item header-buttons-container"}>
-                    <div className={"header-buttons-item"}>
-                        <button className={"header-buttons-item-inner"} onClick={this.props.mergeSelectedCells}>Merge selected cells</button>
-                    </div>
 
-                    <div className={"header-buttons-item"}>
-                        <button className={"header-buttons-item-inner"} onClick={this.props.splitSelectedCells}>Split selected cells</button>
-                    </div>
+                    <DropdownButton
+                        as={ButtonGroup}
+                        key={`header-dropdown-button-import`}
+                        id={`dropdown-import`}
+                        variant={`import`}
+                        title={`Import`}>
 
-                    <div className={"header-buttons-item"}>
-                        <button className={"header-buttons-item-inner"} onClick={this.props.exportData}>Export data</button>
-                    </div>
+                        <Dropdown.Item eventKey="1">
+                            <input
+                                id={"import-txt-file-input"}
+                                className={"header-buttons-item-inner"}
+                                type={"file"}
+                                name={"txt-file"}
+                                accept={".txt"}
+                                onChange={this.handleImportTxtFile}
+                                hidden />
+                            <label onClick={this.handleImportTxtCiphertextButtonClick}>Import TXT file</label>
+                        </Dropdown.Item>
 
-                    <div className={"header-buttons-item"}>
-                        <input id={"import-txt-file-input"} className={"header-buttons-item-inner"} type={"file"} name={"txt-file"} accept={".txt"} onChange={this.handleImportTxtFile} hidden />
-                        <label htmlFor={"import-txt-file-input"} className={"import-file-input-label header-buttons-item-inner"}>Import TXT file</label>
-                    </div>
+                        <Dropdown.Item eventKey="2">
+                            <input
+                                id={"import-json-file-input"}
+                                className={"header-buttons-item-inner"}
+                                type={"file"}
+                                name={"json-file"}
+                                accept={".json"}
+                                onChange={this.handleImportJsonFile}
+                                hidden />
+                            <label onClick={this.handleImportJsonButtonClick}>Import JSON file</label>
+                        </Dropdown.Item>
 
-                    <div className={"header-buttons-item"}>
-                        <input id={"import-json-file-input"} className={"header-buttons-item-inner"} type={"file"} name={"json-file"} accept={".json"} onInput={this.handleImportJsonFile} hidden />
-                        <label htmlFor={"import-json-file-input"} className={"import-file-input-label header-buttons-item-inner"}>Import JSON file</label>
-                    </div>
+                        <Dropdown.Divider />
+
+                        <Dropdown.Item eventKey="1">
+                            <label
+                                className={"header-buttons-item-inner"}
+                                onClick={this.props.exportData}>Export data</label>
+                        </Dropdown.Item>
+
+                    </DropdownButton>
+
+                    <DropdownButton
+                        as={ButtonGroup}
+                        key={`header-dropdown-button-operations`}
+                        id={`dropdown-operations`}
+                        variant={`operations`}
+                        title={`Operations`}>
+
+                        <Dropdown.Item eventKey="1">
+                            <label
+                                className={"header-buttons-item-inner"}
+                                onClick={this.props.mergeSelectedCells}>Merge selected cells</label>
+                        </Dropdown.Item>
+
+                        <Dropdown.Item eventKey="2">
+                            <label
+                                className={"header-buttons-item-inner"}
+                                onClick={this.props.splitSelectedCells}>Split selected cells</label>
+                        </Dropdown.Item>
+
+                    </DropdownButton>
                 </div>
             </div>
         );
+    }
+
+    handleImportTxtCiphertextButtonClick = () => {
+        var clickEvent = new MouseEvent("click", {
+            "view": window,
+            "bubbles": true,
+            "cancelable": false
+        });
+        let input = document.getElementById('import-txt-file-input');
+        input.dispatchEvent(clickEvent);
+    }
+
+    handleImportJsonButtonClick = () => {
+        var clickEvent = new MouseEvent("click", {
+            "view": window,
+            "bubbles": true,
+            "cancelable": false
+        });
+        let input = document.getElementById('import-json-file-input');
+        input.dispatchEvent(clickEvent);
     }
 
     handleImportTxtFile = async (e) => {

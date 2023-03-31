@@ -26,3 +26,7 @@
     cursor: pointer;
 }
 
+.header-dropdown-button {
+    margin: 10px;
+    background-color: aliceblue;
+}

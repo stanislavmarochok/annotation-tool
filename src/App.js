@@ -72,8 +72,8 @@ class App extends React.Component{
 
     handleTxtPlaintextFileImport = (fileContent) => {
         console.log('txt plaintext file import here');
-        // let rawRows = fileContent.split('\n');
-        // this.writeRowsPlaintext(rawRows);
+        let rawRows = fileContent.split('\n');
+        this.writeRowsPlaintext(rawRows);
     }
 
     handleJsonFileImport = (fileJsonContent) => {
@@ -81,40 +81,75 @@ class App extends React.Component{
         this.setState({ rows: rows });
     }
 
-    writeRowsCiphertext = (rawRows) => {
-        let rows = [];
-        for (let i = 0; i < rawRows.length; i++){
-            let rawRow = rawRows[i];
-            rawRow = rawRow.trim();
-            if (!rawRow)
+    writeRowsCiphertext = (ciphertextLines) => {
+        let oldRows = this.state.rows;
+        if (!oldRows){
+            oldRows = [];
+        }
+
+        for (let ciphertextLineIdx = 0; ciphertextLineIdx < ciphertextLines.length; ciphertextLineIdx++){
+            let ciphertextLine = ciphertextLines[ciphertextLineIdx];
+            ciphertextLine = ciphertextLine.trim();
+            if (!ciphertextLine)
                 continue;
 
-            let row = new RowItem(i);
-            for (let j = 0; j < rawRow.length; j++){
-                let cell = new CellItem(rawRow[j], " ", row.rowData.length);
-                row.rowData.push(cell);
+            if (ciphertextLineIdx < oldRows.length){
+                let oldRow = oldRows[ciphertextLineIdx];
+                for (let j = 0; j < ciphertextLine.length; j++){
+                    if (j < oldRow.rowCells.length){
+                        let cell = oldRow.rowCells[j];
+                        cell.cipherText = ciphertextLine[j];
+                    } else {
+                        let newCell = new CellItem(ciphertextLine[j], "", oldRow.rowCells.length);
+                        oldRow.rowCells.push(newCell);
+                    }
+                }
+            } else {
+                let row = new RowItem(ciphertextLineIdx);
+                for (let j = 0; j < ciphertextLine.length; j++) {
+                    let cell = new CellItem(ciphertextLine[j], "", row.rowCells.length);
+                    row.rowCells.push(cell);
+                }
+                oldRows.push(row);
             }
-            rows.push(row);
         }
-        this.setState({ rows: rows });
+        this.setState({ rows: oldRows });
     }
 
-    writeRowsPlaintext = (rawRows) => {
-        let rows = [];
-        for (let i = 0; i < rawRows.length; i++){
-            let rawRow = rawRows[i];
-            rawRow = rawRow.trim();
-            if (!rawRow)
+    writeRowsPlaintext = (plaintextLines) => {
+        let oldRows = this.state.rows;
+        if (!oldRows){
+            oldRows = [];
+        }
+
+        for (let plaintextLineIdx = 0; plaintextLineIdx < plaintextLines.length; plaintextLineIdx++){
+            let plaintextLine = plaintextLines[plaintextLineIdx];
+            plaintextLine = plaintextLine.trim();
+            if (!plaintextLine)
                 continue;
 
-            let row = new RowItem(i);
-            for (let j = 0; j < rawRow.length; j++){
-                let cell = new CellItem(rawRow[j], " ", row.rowData.length);
-                row.rowData.push(cell);
+            if (plaintextLineIdx < oldRows.length){
+                let oldRow = oldRows[plaintextLineIdx];
+                for (let j = 0; j < plaintextLine.length; j++){
+                    if (j < oldRow.rowCells.length){
+                        let cell = oldRow.rowCells[j];
+                        cell.plainText = plaintextLine[j];
+                    } else {
+                        let newCell = new CellItem("", plaintextLine[j], oldRow.rowCells.length);
+                        oldRow.rowCells.push(newCell);
+                    }
+                }
+            } else {
+                let row = new RowItem(plaintextLineIdx);
+                for (let j = 0; j < plaintextLine.length; j++) {
+                    let cell = new CellItem("", plaintextLine[j], row.rowCells.length);
+                    row.rowCells.push(cell);
+                }
+                oldRows.push(row);
             }
-            rows.push(row);
         }
-        this.setState({ rows: rows });
+        console.log(oldRows);
+        this.setState({ rows: oldRows });
     }
 
     onCellClick = (cellItem) => {
@@ -133,16 +168,16 @@ class App extends React.Component{
         {
             let row = this.state.rows[i];
             let selectedCells = [];
-            for (let j = 0; j < row.rowData.length; j++)
+            for (let j = 0; j < row.rowCells.length; j++)
             {
-                let cell = row.rowData[j];
+                let cell = row.rowCells[j];
                 if (cell.selected){
                     selectedCells.push(cell);
                 }
                 else {
                     const selectedCellsLength = selectedCells.length - 1;
                     this.mergeCells(selectedCells);
-                    row.rowData.splice(j - selectedCellsLength, selectedCellsLength);
+                    row.rowCells.splice(j - selectedCellsLength, selectedCellsLength);
 
                     selectedCells = [];
                 }
@@ -172,16 +207,16 @@ class App extends React.Component{
         for (let i = 0; i < this.state.rows.length; i++)
         {
             let row = this.state.rows[i];
-            for (let j = 0; j < row.rowData.length; j++)
+            for (let j = 0; j < row.rowCells.length; j++)
             {
-                let cell = row.rowData[j];
+                let cell = row.rowCells[j];
                 if (cell.selected)
                 {
                     if (cell.cipherText.length > 1)
                     {
                         // split cell to multiple cells
                         const splittedCells = this.splitCell(cell);
-                        row.rowData.splice(j, 1, ...splittedCells);
+                        row.rowCells.splice(j, 1, ...splittedCells);
                     }
                 }
             }
@@ -209,7 +244,7 @@ class App extends React.Component{
 
 class RowItem {
     constructor(rowIndex) {
-        this.rowData = [];
+        this.rowCells = [];
         this.rowIndex = rowIndex;
     }
 }

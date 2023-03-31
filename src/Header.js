@@ -11,25 +11,13 @@ class Header extends React.Component {
             <div className={"header-container"}>
                 <div className={"header-item header-title"}>Annotations-tool</div>
                 <div className={"header-item header-buttons-container"}>
-
                     <DropdownButton
                         as={ButtonGroup}
                         key={`header-dropdown-button-import`}
+                        className={'header-dropdown-button'}
                         id={`dropdown-import`}
                         variant={`import`}
                         title={`Import`}>
-
-                        <Dropdown.Item eventKey="1">
-                            <input
-                                id={"import-txt-ciphertext-file-input"}
-                                className={"header-buttons-item-inner"}
-                                type={"file"}
-                                name={"txt-ciphertext-file"}
-                                accept={".txt"}
-                                onChange={this.handleImportTxtCiphertextFile}
-                                hidden />
-                            <label onClick={this.handleImportTxtCiphertextButtonClick}>Import TXT ciphertext file</label>
-                        </Dropdown.Item>
 
                         <Dropdown.Item eventKey="1">
                             <input
@@ -41,6 +29,18 @@ class Header extends React.Component {
                                 onChange={this.handleImportTxtPlaintextFile}
                                 hidden />
                             <label onClick={this.handleImportTxtPlaintextButtonClick}>Import TXT plaintext file</label>
+                        </Dropdown.Item>
+
+                        <Dropdown.Item eventKey="1">
+                            <input
+                                id={"import-txt-ciphertext-file-input"}
+                                className={"header-buttons-item-inner"}
+                                type={"file"}
+                                name={"txt-ciphertext-file"}
+                                accept={".txt"}
+                                onChange={this.handleImportTxtCiphertextFile}
+                                hidden />
+                            <label onClick={this.handleImportTxtCiphertextButtonClick}>Import TXT ciphertext file</label>
                         </Dropdown.Item>
 
                         <Dropdown.Item eventKey="2">
@@ -68,6 +68,7 @@ class Header extends React.Component {
                     <DropdownButton
                         as={ButtonGroup}
                         key={`header-dropdown-button-operations`}
+                        className={'header-dropdown-button'}
                         id={`dropdown-operations`}
                         variant={`operations`}
                         title={`Operations`}>

@@ -243,8 +243,6 @@ class App extends React.Component{
         return splittedCells;
     }
 
-    // todo: need to add shiftLeft, shiftRight functions for plaintext and ciphertext
-
     shiftPlaintextRight = () => {
         let rows = this.state.rows;
         for (let rowIdx = 0; rowIdx < rows.length; rowIdx++){
@@ -252,18 +250,19 @@ class App extends React.Component{
             let cells = row.rowCells;
 
             for (let cellIdx = 0; cellIdx < cells.length; cellIdx++){
-                let cell = cells[cellIdx];
-                if (cell.selected){
-
+                let firstSelectedCellInRow = cells[cellIdx];
+                if (firstSelectedCellInRow.selected){
+                    console.log(firstSelectedCellInRow);
+                    for (let cellIdx2 = row.rowCells.length - 1; cellIdx2 >= firstSelectedCellInRow.indexInRow; cellIdx2--){
+                        let cell = row.rowCells[cellIdx2];
+                        cell.plainText = row.rowCells[cellIdx2 - 1].plainText;
+                    }
+                    firstSelectedCellInRow.plainText = "";
+                    break;
                 }
             }
         }
-        let row = rows[cellToStartShiftFrom.rowIdx];
-        for (let cellIdx = row.rowCells.length - 1; cellIdx >= cellToStartShiftFrom.indexInRow; cellIdx--){
-            let cell = row.rowCells[cellIdx];
-            cell.plainText = row.rowCells[cellIdx - 1].plainText;
-        }
-        rows[cellToStartShiftFrom.rowIdx].rowCells[cellToStartShiftFrom.indexInRow].plainText = "";
+        this.setState({ rows: rows });
     }
 }
 

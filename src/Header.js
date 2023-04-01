@@ -85,6 +85,12 @@ class Header extends React.Component {
                                 onClick={this.props.splitSelectedCells}>Split selected cells</label>
                         </Dropdown.Item>
 
+                        <Dropdown.Item eventKey="2">
+                            <label
+                                className={"header-buttons-item-inner"}
+                                onClick={this.props.shiftPlaintextRight}>Shift plaintext rights</label>
+                        </Dropdown.Item>
+
                     </DropdownButton>
                 </div>
             </div>

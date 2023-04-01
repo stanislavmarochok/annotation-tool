@@ -24,7 +24,9 @@ class App extends React.Component{
                     exportData={this.exportData}
                     handleTxtCiphertextFileImport={this.handleTxtCiphertextFileImport}
                     handleTxtPlaintextFileImport={this.handleTxtPlaintextFileImport}
-                    handleJsonFileImport={this.handleJsonFileImport} />
+                    handleJsonFileImport={this.handleJsonFileImport}
+                    shiftPlaintextRight={this.shiftPlaintextRight}
+                />
                 <div className={"main-content-container"}>
                     {this.state.rows.map((x, idx) => (
                         <RowComponent
@@ -100,14 +102,14 @@ class App extends React.Component{
                         let cell = oldRow.rowCells[j];
                         cell.cipherText = ciphertextLine[j];
                     } else {
-                        let newCell = new CellItem(ciphertextLine[j], "", oldRow.rowCells.length);
+                        let newCell = new CellItem(ciphertextLine[j], "", oldRow.rowCells.length, ciphertextLineIdx);
                         oldRow.rowCells.push(newCell);
                     }
                 }
             } else {
                 let row = new RowItem(ciphertextLineIdx);
                 for (let j = 0; j < ciphertextLine.length; j++) {
-                    let cell = new CellItem(ciphertextLine[j], "", row.rowCells.length);
+                    let cell = new CellItem(ciphertextLine[j], "", row.rowCells.length, ciphertextLineIdx);
                     row.rowCells.push(cell);
                 }
                 oldRows.push(row);
@@ -135,14 +137,14 @@ class App extends React.Component{
                         let cell = oldRow.rowCells[j];
                         cell.plainText = plaintextLine[j];
                     } else {
-                        let newCell = new CellItem("", plaintextLine[j], oldRow.rowCells.length);
+                        let newCell = new CellItem("", plaintextLine[j], oldRow.rowCells.length, plaintextLineIdx);
                         oldRow.rowCells.push(newCell);
                     }
                 }
             } else {
                 let row = new RowItem(plaintextLineIdx);
                 for (let j = 0; j < plaintextLine.length; j++) {
-                    let cell = new CellItem("", plaintextLine[j], row.rowCells.length);
+                    let cell = new CellItem("", plaintextLine[j], row.rowCells.length, plaintextLineIdx);
                     row.rowCells.push(cell);
                 }
                 oldRows.push(row);
@@ -231,14 +233,37 @@ class App extends React.Component{
         const cellData = cell.cipherText;
         while (splittedCells.length < cellData.length)
         {
-            let newCell = new CellItem(cell.cipherText[0], " ", cell.indexInRow);
+            let newCell = new CellItem(cell.cipherText[0], " ", cell.indexInRow, cell.rowIdx);
             newCell.selected = true;
             splittedCells.push(newCell);
 
-            cell = new CellItem(cell.cipherText.substring(1), " ", cell.indexInRow + 1);
+            cell = new CellItem(cell.cipherText.substring(1), " ", cell.indexInRow + 1, cell.rowIdx);
         }
 
         return splittedCells;
+    }
+
+    // todo: need to add shiftLeft, shiftRight functions for plaintext and ciphertext
+
+    shiftPlaintextRight = () => {
+        let rows = this.state.rows;
+        for (let rowIdx = 0; rowIdx < rows.length; rowIdx++){
+            let row = rows[rowIdx];
+            let cells = row.rowCells;
+
+            for (let cellIdx = 0; cellIdx < cells.length; cellIdx++){
+                let cell = cells[cellIdx];
+                if (cell.selected){
+
+                }
+            }
+        }
+        let row = rows[cellToStartShiftFrom.rowIdx];
+        for (let cellIdx = row.rowCells.length - 1; cellIdx >= cellToStartShiftFrom.indexInRow; cellIdx--){
+            let cell = row.rowCells[cellIdx];
+            cell.plainText = row.rowCells[cellIdx - 1].plainText;
+        }
+        rows[cellToStartShiftFrom.rowIdx].rowCells[cellToStartShiftFrom.indexInRow].plainText = "";
     }
 }
 
@@ -250,11 +275,12 @@ class RowItem {
 }
 
 class CellItem {
-    constructor(cipherText, plainText, indexInRow) {
+    constructor(cipherText, plainText, indexInRow, rowIdx) {
         this.cipherText = cipherText;
         this.plainText = plainText;
         this.selected = false;
         this.indexInRow = indexInRow;
+        this.rowIdx = rowIdx;
     }
 }
 

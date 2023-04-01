@@ -1,7 +1,23 @@
-.row-table {
-    margin-left: 2.5%;
+.row-container {
+    width: 100%;
+    display: inline-flex;
+    flex-direction: row;
     margin-top: 20px;
+    margin-left: 2.5%;
+    background-color: darksalmon;
+    border-radius: 15px;
+}
+
+.row-table {
     background-color: #ffac2b;
     border: 2px solid black;
     border-radius: 4px;
+}
+
+.row-idx {
+    font-size: 1.7em;
+    font-weight: bold;
+    width: 100%;
+    text-align: right;
+    margin: 15px;
 }

@@ -13,7 +13,6 @@
 .item-cell:hover {
     background-color: lightskyblue;
     transform: scale(1.2, 1.2);
-    transform-origin: center;
 }
 
 .upper-line {
@@ -38,5 +37,5 @@
 }
 
 .selected-cell {
-    background-color: skyblue;
+    background-color: #498fff;
 }

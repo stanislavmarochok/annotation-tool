@@ -17,7 +17,7 @@ class App extends React.Component{
 
     render(){
         return (
-            <div>
+            <div className={"whole-page-container"}>
                 <Header
                     mergeSelectedCells={this.mergeSelectedCells}
                     splitSelectedCells={this.splitSelectedCells}

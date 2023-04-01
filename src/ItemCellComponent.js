@@ -14,7 +14,7 @@ class ItemCellComponent extends React.Component {
         return (
             <div className={`item-cell ${this.props.className} ${this.props.cellItem.selected ? 'selected-cell' : ''}`} onClick={this.handleClick}>
                 {this.props.isUpperRow &&
-                    <input name="upper-row-cell-input" onInput={this.handleChange} value={this.props.cellItem.plainText} maxLength={this.props.cellItem.plainText.length} size={this.props.cellItem.plainText.length} />}
+                    <input name="upper-row-cell-input" onInput={this.handleChange} value={this.props.cellItem.plainText} />}
                 {!this.props.isUpperRow && this.props.cellItem.cipherText}
             </div>
         );

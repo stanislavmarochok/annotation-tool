@@ -17,7 +17,7 @@ class App extends React.Component{
 
     render(){
         return (
-            <div onClick={this.handleBackgroundClick}>
+            <div>
                 <Header
                     mergeSelectedCells={this.mergeSelectedCells}
                     splitSelectedCells={this.splitSelectedCells}
@@ -27,7 +27,7 @@ class App extends React.Component{
                     handleJsonFileImport={this.handleJsonFileImport}
                     shiftPlaintextRight={this.shiftPlaintextRight}
                 />
-                <div className={"main-content-container"}>
+                <div className={"main-content-container"} onClick={this.handleBackgroundClick}>
                     {this.state.rows.map((x, idx) => (
                         <RowComponent
                             key={`row-component-${idx}`}

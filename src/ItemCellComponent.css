@@ -1,15 +1,19 @@
 .item-cell {
-    padding: 2px;
+    padding: 5px;
+    margin: 3px;
     text-align: center;
     transition: 250ms;
-    border: 1px solid black;
-    font-size: 1em;
+    border: 2px solid black;
+    border-radius: 4px;
+    font-size: 1.2em;
     /*font-weight: bold;*/
     cursor: pointer;
 }
 
 .item-cell:hover {
     background-color: lightskyblue;
+    transform: scale(1.2, 1.2);
+    transform-origin: center;
 }
 
 .upper-line {
@@ -24,16 +28,15 @@
     font-size: 1em;
     /*font-weight: bold;*/
     outline: none;
-    width: 1.5em;
+    width: 2em;
     cursor: pointer;
 }
 
 .bottom-line {
     background-color: aqua;
+    font-size: 1.4em;
 }
 
 .selected-cell {
-    /*box-shadow: rgba(0, 0, 0, 0.16) 0px 3px 6px, rgba(0, 0, 0, 0.23) 0px 3px 6px;*/
-    border: 1px solid blue;
     background-color: skyblue;
 }

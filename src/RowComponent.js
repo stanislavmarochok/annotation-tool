@@ -6,7 +6,7 @@ import './RowComponent.css';
 class RowComponent extends React.Component {
     render() {
         return (
-            <table cellPadding={0} cellSpacing={0} className={"row-table"}>
+            <table className={"row-table"}>
                 <tbody>
                     <tr>
                         {this.props.row.rowCells.map((x, idx) => (

@@ -12,12 +12,17 @@ class ItemCellComponent extends React.Component {
 
     render(){
         return (
-            <div className={`item-cell ${this.props.className} ${this.props.cellItem.selected ? 'selected-cell' : ''}`} onClick={() => this.props.onClick(this.props.cellItem)}>
+            <div className={`item-cell ${this.props.className} ${this.props.cellItem.selected ? 'selected-cell' : ''}`} onClick={this.handleClick}>
                 {this.props.isUpperRow &&
                     <input name="upper-row-cell-input" onInput={this.handleChange} value={this.props.cellItem.plainText} size={this.props.cellItem.plainText.length} />}
                 {!this.props.isUpperRow && this.props.cellItem.cipherText}
             </div>
         );
+    }
+
+    handleClick = (event) => {
+        event.stopPropagation();
+        this.props.onClick(this.props.cellItem)
     }
 
     handleChange = (event) => {

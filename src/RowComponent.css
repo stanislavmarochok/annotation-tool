@@ -1,5 +1,7 @@
 .row-table {
-    width: 95%;
     margin-left: 2.5%;
     margin-top: 20px;
+    background-color: #ffac2b;
+    border: 2px solid black;
+    border-radius: 4px;
 }

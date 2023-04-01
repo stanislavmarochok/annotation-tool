@@ -12,12 +12,12 @@ class App extends React.Component{
     }
 
     componentDidMount() {
-        // this.createTestData();
+        this.createTestData();
     }
 
     render(){
         return (
-            <>
+            <div onClick={this.handleBackgroundClick}>
                 <Header
                     mergeSelectedCells={this.mergeSelectedCells}
                     splitSelectedCells={this.splitSelectedCells}
@@ -37,13 +37,11 @@ class App extends React.Component{
                         />
                     ))}
                 </div>
-            </>
+            </div>
         );
     }
 
     createTestData = () => {
-        // todo: remove this function later
-
         let rawRowsText = "6323194643424029339684338344236421282556353\n" +
             "1343233867360002719566437833639234338934572\n" +
             "89114323193836464804239003505141541179438549\n" +
@@ -51,7 +49,24 @@ class App extends React.Component{
             "00590424321593643360087036451223006303600590\n";
 
         let rawRows = rawRowsText.split('\n');
-        this.writeRows(rawRows);
+        this.writeRowsCiphertext(rawRows);
+    }
+
+    handleBackgroundClick = () => {
+        let rows = this.state.rows;
+
+        for (let rowIdx = 0; rowIdx < rows.length; rowIdx++) {
+            let row = rows[rowIdx];
+            let rowCells = row.rowCells;
+            for (let cellIdx = 0; cellIdx < rowCells.length; cellIdx++){
+                let cell = rowCells[cellIdx];
+                if (cell.selected){
+                    cell.selected = false;
+                }
+            }
+        }
+
+        this.setState({ rows: rows });
     }
 
     exportData = () => {

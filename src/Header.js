@@ -17,7 +17,7 @@ class Header extends React.Component {
                         className={'header-dropdown-button'}
                         id={`dropdown-import`}
                         variant={`import`}
-                        title={`Import`}>
+                        title={`Data operations`}>
 
                         <Dropdown.Item eventKey="1">
                             <input
@@ -71,7 +71,7 @@ class Header extends React.Component {
                         className={'header-dropdown-button'}
                         id={`dropdown-operations`}
                         variant={`operations`}
-                        title={`Operations`}>
+                        title={`Cell operations`}>
 
                         <Dropdown.Item eventKey="1">
                             <label
@@ -88,7 +88,13 @@ class Header extends React.Component {
                         <Dropdown.Item eventKey="2">
                             <label
                                 className={"header-buttons-item-inner"}
-                                onClick={this.props.shiftPlaintextRight}>Shift plaintext rights</label>
+                                onClick={this.props.shiftPlaintextRight}>Shift plaintext to right</label>
+                        </Dropdown.Item>
+
+                        <Dropdown.Item eventKey="2">
+                            <label
+                                className={"header-buttons-item-inner"}
+                                onClick={this.props.shiftPlaintextLeft}>Shift plaintext to left</label>
                         </Dropdown.Item>
 
                     </DropdownButton>

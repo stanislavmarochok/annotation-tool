@@ -12,7 +12,7 @@ class App extends React.Component{
     }
 
     componentDidMount() {
-        this.createTestData();
+        // this.createTestData();
     }
 
     render(){
@@ -26,6 +26,7 @@ class App extends React.Component{
                     handleTxtPlaintextFileImport={this.handleTxtPlaintextFileImport}
                     handleJsonFileImport={this.handleJsonFileImport}
                     shiftPlaintextRight={this.shiftPlaintextRight}
+                    shiftPlaintextLeft={this.shiftPlaintextLeft}
                 />
                 <div className={"main-content-container"} onClick={this.handleBackgroundClick}>
                     {this.state.rows.map((x, idx) => (
@@ -268,12 +269,36 @@ class App extends React.Component{
                 let firstSelectedCellInRow = cells[cellIdx];
                 if (firstSelectedCellInRow.selected){
                     console.log(firstSelectedCellInRow);
-                    for (let cellIdx2 = row.rowCells.length - 1; cellIdx2 >= firstSelectedCellInRow.indexInRow; cellIdx2--){
+                    for (let cellIdx2 = row.rowCells.length - 1; cellIdx2 > cellIdx; cellIdx2--){
                         let cell = row.rowCells[cellIdx2];
                         cell.plainText = row.rowCells[cellIdx2 - 1].plainText;
                     }
                     firstSelectedCellInRow.plainText = "";
                     break;
+                }
+            }
+        }
+        this.setState({ rows: rows });
+    }
+
+    shiftPlaintextLeft = () => {
+        let rows = this.state.rows;
+        for (let rowIdx = 0; rowIdx < rows.length; rowIdx++){
+            let row = rows[rowIdx];
+            let cells = row.rowCells;
+
+            for (let cellIdx = 0; cellIdx < cells.length; cellIdx++){
+                let firstSelectedCellInRow = cells[cellIdx];
+                if (firstSelectedCellInRow.selected){
+                    for (let cellIdx2 = cellIdx - 1; cellIdx2 < row.rowCells.length - 1; cellIdx2++){
+                        if (cellIdx2 < 0){
+                            continue;
+                        }
+                        let cell = row.rowCells[cellIdx2];
+                        cell.plainText = row.rowCells[cellIdx2 + 1].plainText;
+                    }
+                    row.rowCells[row.rowCells.length - 1].plainText = "";
+                    cellIdx += 1;
                 }
             }
         }

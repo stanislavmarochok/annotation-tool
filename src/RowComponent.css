@@ -21,3 +21,10 @@
     text-align: right;
     margin: 15px;
 }
+
+.col-idx {
+    width: 100%;
+    text-align: center;
+    font-size: 1em;
+    font-weight: bold;
+}

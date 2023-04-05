@@ -13,26 +13,33 @@ class RowComponent extends React.Component {
                 <div>
                     <table className={"row-table"}>
                         <tbody>
-                        <tr>
-                            {this.props.row.rowCells.map((x, idx) => (
-                                <td key={`upper-row-cell-${idx}`}>
-                                    <UpperCellItemComponent
-                                        cellItem={x}
-                                        onClick={this.props.onCellClick}
-                                        handleCellInputChange={this.props.handleCellInputChange} />
-                                </td>
-                            ))}
-                        </tr>
-                        <tr>
-                            {this.props.row.rowCells.map((x, idx) => (
-                                <td key={`bottom-row-cell-${idx}`}>
-                                    <BottomCellItemComponent
-                                        cellItem={x}
-                                        onClick={this.props.onCellClick}
-                                        handleCellInputChange={this.props.handleCellInputChange} />
-                                </td>
-                            ))}
-                        </tr>
+                            <tr>
+                                {this.props.row.rowCells.map((x, idx) => (
+                                    <td key={`upper-row-cell-${idx}`}>
+                                        <UpperCellItemComponent
+                                            cellItem={x}
+                                            onClick={this.props.onCellClick}
+                                            handleCellInputChange={this.props.handleCellInputChange} />
+                                    </td>
+                                ))}
+                            </tr>
+                            <tr>
+                                {this.props.row.rowCells.map((x, idx) => (
+                                    <td key={`bottom-row-cell-${idx}`}>
+                                        <BottomCellItemComponent
+                                            cellItem={x}
+                                            onClick={this.props.onCellClick}
+                                            handleCellInputChange={this.props.handleCellInputChange} />
+                                    </td>
+                                ))}
+                            </tr>
+                            <tr>
+                                {this.props.row.rowCells.map((x, idx) => (
+                                    <td key={`upper-row-cell-${idx}`}>
+                                        <div className={"col-idx"}>{`${idx}`}</div>
+                                    </td>
+                                ))}
+                            </tr>
                         </tbody>
                     </table>
                 </div>

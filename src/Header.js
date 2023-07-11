@@ -63,6 +63,12 @@ class Header extends React.Component {
                                 onClick={this.props.exportData}>Export data</label>
                         </Dropdown.Item>
 
+                        <Dropdown.Item eventKey="1">
+                            <label
+                                className={"header-buttons-item-inner"}
+                                onClick={this.props.constructKey}>Construct key</label>
+                        </Dropdown.Item>
+
                     </DropdownButton>
 
                     <DropdownButton

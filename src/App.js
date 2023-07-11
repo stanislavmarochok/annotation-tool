@@ -27,6 +27,7 @@ class App extends React.Component{
                     handleJsonFileImport={this.handleJsonFileImport}
                     shiftPlaintextRight={this.shiftPlaintextRight}
                     shiftPlaintextLeft={this.shiftPlaintextLeft}
+                    constructKey={this.constructKey}
                 />
                 <div className={"main-content-container"} onClick={this.handleBackgroundClick}>
                     {this.state.rows.map((x, idx) => (
@@ -68,6 +69,36 @@ class App extends React.Component{
         }
 
         this.setState({ rows: rows });
+    }
+
+    constructKey = () => {
+        let key = {};
+        let rows = this.state.rows;
+        for (let rowIdx = 0; rowIdx < rows.length; rowIdx++){
+            let row = rows[rowIdx];
+            let rowCells = row.rowCells;
+            for (let cellIdx = 0; cellIdx < rowCells.length; cellIdx++) {
+                let cell = rowCells[cellIdx];
+                let cipherText = cell.cipherText;
+                let oldKey = key[cipherText];
+                if (!oldKey){
+                    key[cipherText] = [];
+                    oldKey = key[cipherText];
+                }
+                if (!oldKey.includes(cell.plainText)){
+                    oldKey.push(cell.plainText);
+                }
+            }
+        }
+
+        const stringifiedData = JSON.stringify(key);
+        const blob = new Blob([stringifiedData], { type: "text/plain" });
+        const url = URL.createObjectURL(blob);
+
+        const link = document.createElement("a");
+        link.download = "constructed_key.json";
+        link.href = url;
+        link.click();
     }
 
     exportData = () => {

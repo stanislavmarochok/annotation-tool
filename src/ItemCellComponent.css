@@ -8,7 +8,6 @@
     font-size: 1.2em;
     /*font-weight: bold;*/
     cursor: pointer;
-    letter-spacing: 1em;
     width: 100px;
 }
 
@@ -30,8 +29,7 @@
     /*font-weight: bold;*/
     outline: none;
     cursor: pointer;
-    width: 50px;
-    letter-spacing: 0.5em;
+    width: 80px;
 }
 
 .bottom-line {
